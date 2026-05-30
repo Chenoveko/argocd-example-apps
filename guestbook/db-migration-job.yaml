@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration-job
+  namespace: default
+  annotations:
+    # Ejecuta este Job antes de sincronizar el resto de recursos
+    argocd.argoproj.io/hook: PreSync
+    # Borra el Job anterior antes de crear uno nuevo y elimina el Job
+    # cuando termina correctamente
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - "echo 'Running DB migration...'; sleep 10; echo 'Done'"
