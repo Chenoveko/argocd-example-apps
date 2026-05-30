@@ -4,11 +4,8 @@ metadata:
   name: db-migration-job
   namespace: default
   annotations:
-    # Ejecuta este Job antes de sincronizar el resto de recursos
-    argocd.argoproj.io/hook: PreSync
-    # Borra el Job anterior antes de crear uno nuevo y elimina el Job
-    # cuando termina correctamente
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "3" # Define el orden de sincronización en ArgoCD.
+    # Los recursos con menor valor se aplican primero.
 spec:
   backoffLimit: 2
   template:
